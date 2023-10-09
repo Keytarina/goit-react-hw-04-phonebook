@@ -16,14 +16,14 @@ export function App() {
   ]);
   const [filter, setFilter] = useState('');
 
-  useEffect((prevState) => {
+  useEffect(() => {
     const savedContacts = localStorage.getItem("contacts");
     const parsedContacts = JSON.parse(savedContacts);
     if(parsedContacts){
       setContacts(parsedContacts); 
     }
   }, [])
-  useEffect((prevState) => {
+  useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts))
   }, [contacts])
 
@@ -32,12 +32,9 @@ export function App() {
       alert(`${data.name} is already in contacts.`);
       return;
     }
-    setContacts([...contacts,
-      { 
-        id: nanoid(10),
-        name: data.name,
-        number: data.number
-      }
+    setContacts(prevContacts => [
+      ...prevContacts, 
+      { id: nanoid(10), ...data },
     ]);
   }
 
@@ -51,7 +48,7 @@ export function App() {
   }
 
   const onDeleteContact = (id) => {
-    setContacts(contacts.filter(contact => contact.id !== id));
+    setContacts(prevContacts => prevContacts.filter(contact => contact.id !== id));
   }
 
   return (
